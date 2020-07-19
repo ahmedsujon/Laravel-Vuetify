@@ -1,16 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+Vue.use(Router)
 
-const Foo = { template: "<v-alert type='error'>I'm Foo Component</v-alert>" }
-const Bar = { template: "<v-alert type='error'>I'm Bar Component</v-alert>" }
-const User = { template: "<v-alert type='info'>I'm {{ $route.params.name }}</v-alert>" }
+import Login from './components/login.vue'
+import Dashboard from './components/dashboard.vue'
 
 Vue.use(Router)
 
 const routes = [
-    { path: '/foo', component: Foo },
-    { path: '/bar', component: Bar },
-    { path: '/user/:name', component: User }
+    { path: '/login', component: Login, name: 'Login' },
+    { path: '/dashboard', component: Dashboard, name: 'Dashboard' }
   ]
 
 export default new Router({
