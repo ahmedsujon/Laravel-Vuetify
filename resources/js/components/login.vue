@@ -27,14 +27,16 @@
                   <v-text-field
                     label="Login"
                     name="login"
+                    v-model="email"
                     prepend-icon="mdi-account"
-                    type="text"
+                    type="email"
                   ></v-text-field>
 
                   <v-text-field
                     id="password"
                     label="Password"
                     name="password"
+                    v-model="password"
                     prepend-icon="mdi-lock"
                     type="password"
                   ></v-text-field>
@@ -42,7 +44,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary">Login</v-btn>
+                <v-btn color="primary" @click="login  ">Login</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -54,6 +56,16 @@
 
 <script>
   export default {
-
+      data() {
+          return {
+              email: '',
+              password: ''
+          }
+      },
+      methods: {
+          login: function(){
+              localStorage.setItem('token', 'asgsa87sadsyua7')
+          }
+      }
   }
 </script>

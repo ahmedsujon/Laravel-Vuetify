@@ -9,7 +9,14 @@ Vue.use(Router)
 
 const routes = [
     { path: '/login', component: Login, name: 'Login' },
-    { path: '/dashboard', component: Dashboard, name: 'Dashboard' }
+    { path: '/dashboard', component: Dashboard, name: 'Dashboard',
+    beforeEnter: (to, from, next) => {
+        if(localStorage.getItem('token')){
+            next();
+        }else{
+            next('/login');
+        }
+      }}
   ]
 
 export default new Router({
