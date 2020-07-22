@@ -30,11 +30,19 @@
                     bottom
                     color="deep-purple accent-4">
                     </v-progress-linear>
-                <v-form>
+
+                    <!-- Form validation -->
+                    <v-form
+                        ref="form"
+                        v-model="valid"
+                        >
+
                   <v-text-field
                     label="Login"
                     name="login"
                     v-model="email"
+                    :rules="emailRules"
+                    required
                     prepend-icon="mdi-account"
                     type="email"
                   ></v-text-field>
@@ -44,6 +52,8 @@
                     label="Password"
                     name="password"
                     v-model="password"
+                    :rules="passwordRules"
+                    required
                     prepend-icon="mdi-lock"
                     type="password"
                   ></v-text-field>
@@ -51,7 +61,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="login">Login</v-btn>
+                <v-btn color="primary" :disabled="!valid" @click="login">Login</v-btn>
               </v-card-actions>
             </v-card>
               <v-snackbar
@@ -81,8 +91,16 @@
   export default {
       data() {
           return {
+              valid: true,
               email: '',
+              emailRules: [
+                v => !!v || 'E-mail is required',
+                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+            ],
               password: '',
+              passwordRules: [
+                v => !!v || 'Password is required',
+            ],
               text: '',
               loading: false,
               snackbar : false,
@@ -109,7 +127,10 @@
             axios.post('/api/login', {'email' : this.email, 'password' : this.password})
             .then(res => {
                 localStorage.setItem('token', res.data.token)
-                this.$router.push('/dashboard').then(res => console.log('LoggedIn success')).catch(err => console.log(err))
+                localStorage.setItem('loggedIn', true)
+                this.$router.push('/dashboard')
+                .then(res => console.log('LoggedIn successfully'))
+                .catch(err => console.log(err))
             })
             .catch( err => {
                 this.text = err.response.data.status

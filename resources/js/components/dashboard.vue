@@ -41,6 +41,28 @@
                 </v-list-item-title>
               </v-list-item-content>
             </template>
+
+        <v-list-item link @click="logout">
+          <v-list-item-action>
+            <v-icon color="grey darken-1">mdi-cog</v-icon>
+          </v-list-item-action>
+          <v-list-item-title>Log Out</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon color="grey darken-1">mdi-cog</v-icon>
+          </v-list-item-action>
+          <v-list-item-title>Log Out</v-list-item-title>
+        </v-list-item>
+
+           <v-list-item link>
+          <v-list-item-action>
+            <v-icon color="grey darken-1">mdi-cog</v-icon>
+          </v-list-item-action>
+          <v-list-item-title>Log Out</v-list-item-title>
+        </v-list-item>
+
             <v-list-item
               v-for="(child, i) in item.children"
               :key="i"
@@ -55,6 +77,7 @@
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+
           </v-list-group>
           <v-list-item
             v-else
@@ -214,11 +237,10 @@
             text
             @click="dialog = false"
           >Save</v-btn>
-             <v-snackbar
+        <v-snackbar
             v-model="snackbar"
             >
             You Are LoggedIn Successfully!
-
             <template v-slot:action="{ attrs }">
                 <v-btn
                 color="deep-purple"
@@ -229,7 +251,7 @@
                 Close
                 </v-btn>
             </template>
-            </v-snackbar>
+        </v-snackbar>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -240,11 +262,11 @@
   export default {
     props: {
       source: String,
-      snackbar: false,
     },
     data: () => ({
       dialog: false,
       drawer: null,
+      snackbar: false,
       items: [
         { icon: 'mdi-contacts', text: 'Contacts' },
         { icon: 'mdi-history', text: 'Frequently contacted' },
@@ -275,11 +297,23 @@
         { icon: 'mdi-message', text: 'Send feedback' },
         { icon: 'mdi-help-circle', text: 'Help' },
         { icon: 'mdi-cellphone-link', text: 'App downloads' },
-        { icon: 'mdi-keyboard', text: 'Log Out' },
+        { icon: 'mdi-keyboard', text: 'Go to' },
       ],
     }),
-    created(){
-        this.snackbar = true;
+   mounted(){
+       this.snackbar = localStorage.getItem('loggedIn') ? true : false;
+       localStorage.removeItem('loggedIn')
+   },
+    methods:{
+        logout: function(){
+            localStorage.removeItem('token');
+            this.$router.push('/login')
+            .then(res => {
+                this.text = "LoggedOut successfully";
+                this.snackbar = true;
+            })
+            .catch(err => console.log(err))
+        }
     }
   }
 </script>

@@ -2146,15 +2146,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    source: String,
-    snackbar: false
+    source: String
   },
   data: function data() {
     return {
       dialog: false,
       drawer: null,
+      snackbar: false,
       items: [{
         icon: 'mdi-contacts',
         text: 'Contacts'
@@ -2203,12 +2225,26 @@ __webpack_require__.r(__webpack_exports__);
         text: 'App downloads'
       }, {
         icon: 'mdi-keyboard',
-        text: 'Log Out'
+        text: 'Go to'
       }]
     };
   },
-  created: function created() {
-    this.snackbar = true;
+  mounted: function mounted() {
+    this.snackbar = localStorage.getItem('loggedIn') ? true : false;
+    localStorage.removeItem('loggedIn');
+  },
+  methods: {
+    logout: function logout() {
+      var _this = this;
+
+      localStorage.removeItem('token');
+      this.$router.push('/login').then(function (res) {
+        _this.text = "LoggedOut successfully";
+        _this.snackbar = true;
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    }
   }
 });
 
@@ -2302,11 +2338,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      valid: true,
       email: '',
+      emailRules: [function (v) {
+        return !!v || 'E-mail is required';
+      }, function (v) {
+        return /.+@.+\..+/.test(v) || 'E-mail must be valid';
+      }],
       password: '',
+      passwordRules: [function (v) {
+        return !!v || 'Password is required';
+      }],
       text: '',
       loading: false,
       snackbar: false
@@ -2336,9 +2391,10 @@ __webpack_require__.r(__webpack_exports__);
         'password': this.password
       }).then(function (res) {
         localStorage.setItem('token', res.data.token);
+        localStorage.setItem('loggedIn', true);
 
         _this.$router.push('/dashboard').then(function (res) {
-          return console.log('LoggedIn success');
+          return console.log('LoggedIn successfully');
         })["catch"](function (err) {
           return console.log(err);
         });
@@ -20132,6 +20188,69 @@ var render = function() {
                         },
                         [
                           _vm._v(" "),
+                          _c(
+                            "v-list-item",
+                            { attrs: { link: "" }, on: { click: _vm.logout } },
+                            [
+                              _c(
+                                "v-list-item-action",
+                                [
+                                  _c(
+                                    "v-icon",
+                                    { attrs: { color: "grey darken-1" } },
+                                    [_vm._v("mdi-cog")]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("v-list-item-title", [_vm._v("Log Out")])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-list-item",
+                            { attrs: { link: "" } },
+                            [
+                              _c(
+                                "v-list-item-action",
+                                [
+                                  _c(
+                                    "v-icon",
+                                    { attrs: { color: "grey darken-1" } },
+                                    [_vm._v("mdi-cog")]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("v-list-item-title", [_vm._v("Log Out")])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-list-item",
+                            { attrs: { link: "" } },
+                            [
+                              _c(
+                                "v-list-item-action",
+                                [
+                                  _c(
+                                    "v-icon",
+                                    { attrs: { color: "grey darken-1" } },
+                                    [_vm._v("mdi-cog")]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("v-list-item-title", [_vm._v("Log Out")])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
                           _vm._l(item.children, function(child, i) {
                             return _c(
                               "v-list-item",
@@ -20536,7 +20655,7 @@ var render = function() {
                     },
                     [
                       _vm._v(
-                        "\n          You Are LoggedIn Successfully!\n\n          "
+                        "\n          You Are LoggedIn Successfully!\n          "
                       )
                     ]
                   )
@@ -20620,11 +20739,23 @@ var render = function() {
                               _vm._v(" "),
                               _c(
                                 "v-form",
+                                {
+                                  ref: "form",
+                                  model: {
+                                    value: _vm.valid,
+                                    callback: function($$v) {
+                                      _vm.valid = $$v
+                                    },
+                                    expression: "valid"
+                                  }
+                                },
                                 [
                                   _c("v-text-field", {
                                     attrs: {
                                       label: "Login",
                                       name: "login",
+                                      rules: _vm.emailRules,
+                                      required: "",
                                       "prepend-icon": "mdi-account",
                                       type: "email"
                                     },
@@ -20642,6 +20773,8 @@ var render = function() {
                                       id: "password",
                                       label: "Password",
                                       name: "password",
+                                      rules: _vm.passwordRules,
+                                      required: "",
                                       "prepend-icon": "mdi-lock",
                                       type: "password"
                                     },
@@ -20668,7 +20801,10 @@ var render = function() {
                               _c(
                                 "v-btn",
                                 {
-                                  attrs: { color: "primary" },
+                                  attrs: {
+                                    color: "primary",
+                                    disabled: !_vm.valid
+                                  },
                                   on: { click: _vm.login }
                                 },
                                 [_vm._v("Login")]
