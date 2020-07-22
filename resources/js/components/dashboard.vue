@@ -27,6 +27,7 @@
               >EDIT</a>
             </v-col>
           </v-row>
+
           <v-list-group
             v-else-if="item.children"
             :key="item.text"
@@ -41,48 +42,12 @@
                 </v-list-item-title>
               </v-list-item-content>
             </template>
-
-        <v-list-item link @click="logout">
-          <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-cog</v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Log Out</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-cog</v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Log Out</v-list-item-title>
-        </v-list-item>
-
-           <v-list-item link>
-          <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-cog</v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Log Out</v-list-item-title>
-        </v-list-item>
-
-            <v-list-item
-              v-for="(child, i) in item.children"
-              :key="i"
-              link
-            >
-              <v-list-item-action v-if="child.icon">
-                <v-icon>{{ child.icon }}</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ child.text }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-
           </v-list-group>
           <v-list-item
             v-else
             :key="item.text"
             link
+            :to="item.action"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -108,7 +73,7 @@
         style="width: 300px"
         class="ml-0 pl-4"
       >
-        <span class="hidden-sm-and-down">Google Contacts</span>
+        <span class="hidden-sm-and-down">Vutify Admin</span>
       </v-toolbar-title>
       <v-text-field
         flat
@@ -141,10 +106,10 @@
     </v-app-bar>
     <v-main>
       <v-container
-        class="fill-height"
+        class=""
         fluid
       >
-
+       <router-view></router-view>
       </v-container>
     </v-main>
     <v-btn
@@ -268,36 +233,15 @@
       drawer: null,
       snackbar: false,
       items: [
-        { icon: 'mdi-contacts', text: 'Contacts' },
-        { icon: 'mdi-history', text: 'Frequently contacted' },
-        { icon: 'mdi-content-copy', text: 'Duplicates' },
-        {
-          icon: 'mdi-chevron-up',
-          'icon-alt': 'mdi-chevron-down',
-          text: 'Labels',
-          model: true,
-          children: [
-            { icon: 'mdi-plus', text: 'Create label' },
-          ],
-        },
-        {
-          icon: 'mdi-chevron-up',
-          'icon-alt': 'mdi-chevron-down',
-          text: 'More',
-          model: false,
-          children: [
-            { text: 'Import' },
-            { text: 'Export' },
-            { text: 'Print' },
-            { text: 'Undo changes' },
-            { text: 'Other contacts' },
-          ],
-        },
-        { icon: 'mdi-cog', text: 'Settings' },
-        { icon: 'mdi-message', text: 'Send feedback' },
-        { icon: 'mdi-help-circle', text: 'Help' },
-        { icon: 'mdi-cellphone-link', text: 'App downloads' },
-        { icon: 'mdi-keyboard', text: 'Go to' },
+        { icon: 'mdi-home', text: 'Home', action: '/dashboard' },
+        { icon: 'mdi-contacts', text: 'Users', action: '/dashboard/userroles' },
+        { icon: 'mdi-history', text: 'Frequently contacted', action: '#' },
+        { icon: 'mdi-content-copy', text: 'Duplicates', action: '#' },
+        { icon: 'mdi-cog', text: 'Settings', action: '#' },
+        { icon: 'mdi-message', text: 'Send feedback', action: '#' },
+        { icon: 'mdi-help-circle', text: 'Help', action: '#' },
+        { icon: 'mdi-cellphone-link', text: 'App downloads', action: '#' },
+        { icon: 'mdi-keyboard', text: 'LogOut', action: 'login' },
       ],
     }),
    mounted(){
