@@ -121,25 +121,7 @@
         class="fill-height"
         fluid
       >
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-tooltip right>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                :href="source"
-                icon
-                large
-                target="_blank"
-                v-on="on"
-              >
-                <v-icon large>mdi-code-tags</v-icon>
-              </v-btn>
-            </template>
-            <span>Source</span>
-          </v-tooltip>
-        </v-row>
+
       </v-container>
     </v-main>
     <v-btn
@@ -232,6 +214,22 @@
             text
             @click="dialog = false"
           >Save</v-btn>
+             <v-snackbar
+            v-model="snackbar"
+            >
+            You Are LoggedIn Successfully!
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="deep-purple"
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+                >
+                Close
+                </v-btn>
+            </template>
+            </v-snackbar>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -242,6 +240,7 @@
   export default {
     props: {
       source: String,
+      snackbar: false,
     },
     data: () => ({
       dialog: false,
@@ -276,8 +275,11 @@
         { icon: 'mdi-message', text: 'Send feedback' },
         { icon: 'mdi-help-circle', text: 'Help' },
         { icon: 'mdi-cellphone-link', text: 'App downloads' },
-        { icon: 'mdi-keyboard', text: 'Go to the old version' },
+        { icon: 'mdi-keyboard', text: 'Log Out' },
       ],
     }),
+    created(){
+        this.snackbar = true;
+    }
   }
 </script>

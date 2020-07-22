@@ -2146,11 +2146,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    source: String
+    source: String,
+    snackbar: false
   },
   data: function data() {
     return {
@@ -2204,9 +2203,12 @@ __webpack_require__.r(__webpack_exports__);
         text: 'App downloads'
       }, {
         icon: 'mdi-keyboard',
-        text: 'Go to the old version'
+        text: 'Log Out'
       }]
     };
+  },
+  created: function created() {
+    this.snackbar = true;
   }
 });
 
@@ -2334,6 +2336,12 @@ __webpack_require__.r(__webpack_exports__);
         'password': this.password
       }).then(function (res) {
         localStorage.setItem('token', res.data.token);
+
+        _this.$router.push('/dashboard').then(function (res) {
+          return console.log('LoggedIn success');
+        })["catch"](function (err) {
+          return console.log(err);
+        });
       })["catch"](function (err) {
         _this.text = err.response.data.status;
         _this.snackbar = true;
@@ -20280,57 +20288,10 @@ var render = function() {
       _c(
         "v-main",
         [
-          _c(
-            "v-container",
-            { staticClass: "fill-height", attrs: { fluid: "" } },
-            [
-              _c(
-                "v-row",
-                { attrs: { align: "center", justify: "center" } },
-                [
-                  _c(
-                    "v-tooltip",
-                    {
-                      attrs: { right: "" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "activator",
-                          fn: function(ref) {
-                            var on = ref.on
-                            return [
-                              _c(
-                                "v-btn",
-                                _vm._g(
-                                  {
-                                    attrs: {
-                                      href: _vm.source,
-                                      icon: "",
-                                      large: "",
-                                      target: "_blank"
-                                    }
-                                  },
-                                  on
-                                ),
-                                [
-                                  _c("v-icon", { attrs: { large: "" } }, [
-                                    _vm._v("mdi-code-tags")
-                                  ])
-                                ],
-                                1
-                              )
-                            ]
-                          }
-                        }
-                      ])
-                    },
-                    [_vm._v(" "), _c("span", [_vm._v("Source")])]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
+          _c("v-container", {
+            staticClass: "fill-height",
+            attrs: { fluid: "" }
+          })
         ],
         1
       ),
@@ -20529,6 +20490,55 @@ var render = function() {
                       }
                     },
                     [_vm._v("Save")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-snackbar",
+                    {
+                      scopedSlots: _vm._u([
+                        {
+                          key: "action",
+                          fn: function(ref) {
+                            var attrs = ref.attrs
+                            return [
+                              _c(
+                                "v-btn",
+                                _vm._b(
+                                  {
+                                    attrs: { color: "deep-purple", text: "" },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.snackbar = false
+                                      }
+                                    }
+                                  },
+                                  "v-btn",
+                                  attrs,
+                                  false
+                                ),
+                                [
+                                  _vm._v(
+                                    "\n              Close\n              "
+                                  )
+                                ]
+                              )
+                            ]
+                          }
+                        }
+                      ]),
+                      model: {
+                        value: _vm.snackbar,
+                        callback: function($$v) {
+                          _vm.snackbar = $$v
+                        },
+                        expression: "snackbar"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n          You Are LoggedIn Successfully!\n\n          "
+                      )
+                    ]
                   )
                 ],
                 1

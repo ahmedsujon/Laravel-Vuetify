@@ -109,6 +109,7 @@
             axios.post('/api/login', {'email' : this.email, 'password' : this.password})
             .then(res => {
                 localStorage.setItem('token', res.data.token)
+                this.$router.push('/dashboard').then(res => console.log('LoggedIn success')).catch(err => console.log(err))
             })
             .catch( err => {
                 this.text = err.response.data.status
