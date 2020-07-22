@@ -23,6 +23,13 @@
                 <v-toolbar-title>Login form</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
+                <v-progress-linear
+                    :active="loading"
+                    :indeterminate="loading"
+                    absolute
+                    bottom
+                    color="deep-purple accent-4">
+                    </v-progress-linear>
                 <v-form>
                   <v-text-field
                     label="Login"
@@ -44,9 +51,25 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="login  ">Login</v-btn>
+                <v-btn color="primary" @click="login">Login</v-btn>
               </v-card-actions>
             </v-card>
+              <v-snackbar
+            v-model="snackbar"
+            >
+            {{ text }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="deep-purple"
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+                >
+                Close
+                </v-btn>
+            </template>
+            </v-snackbar>
           </v-col>
         </v-row>
       </v-container>
@@ -59,12 +82,38 @@
       data() {
           return {
               email: '',
-              password: ''
+              password: '',
+              text: '',
+              loading: false,
+              snackbar : false,
           }
       },
       methods: {
           login: function(){
-              localStorage.setItem('token', 'asgsa87sadsyua7')
+              axios.interceptors.request.use((config) => {
+                  this.loading = true;
+                return config;
+            }, (error) => {
+                this.loading = false
+                return Promise.reject(error);
+            });
+
+            // Add a response interceptor
+            axios.interceptors.response.use((response) => {
+                  this.login = false;
+                return response;
+            }, (error) => {
+                this.loading = false
+                return Promise.reject(error);
+            });
+            axios.post('/api/login', {'email' : this.email, 'password' : this.password})
+            .then(res => {
+                localStorage.setItem('token', res.data.token)
+            })
+            .catch( err => {
+                this.text = err.response.data.status
+                this.snackbar = true;
+            })
           }
       }
   }
