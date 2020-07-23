@@ -59,6 +59,14 @@
             </v-list-item-content>
           </v-list-item>
         </template>
+        
+        <v-list-item link @click="logout">
+          <v-list-item-action>
+            <v-icon color="grey darken-1">mdi-cog</v-icon>
+          </v-list-item-action>
+          <v-list-item-title class="grey--text text--darken-1">Logout</v-list-item-title>
+        </v-list-item>
+
       </v-list>
     </v-navigation-drawer>
 
