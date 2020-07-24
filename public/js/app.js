@@ -2128,19 +2128,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
@@ -2554,7 +2541,11 @@ __webpack_require__.r(__webpack_exports__);
       });
       axios.get('/api/roles', {}).then(function (res) {
         return _this.roles = res.data.roles;
-      });
+      }); // .catch(err => {
+      //     if(err.response.status == 401)
+      //     localStorage.removeItem('token');
+      //     this.$router.push('/login');
+      // })
     },
     editItem: function editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
@@ -20478,29 +20469,8 @@ var render = function() {
           _vm._v(" "),
           _c(
             "v-btn",
-            { attrs: { icon: "" } },
+            { attrs: { icon: "", link: "" }, on: { click: _vm.logout } },
             [_c("v-icon", [_vm._v("mdi-bell")])],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-btn",
-            { attrs: { icon: "", large: "" } },
-            [
-              _c(
-                "v-avatar",
-                { attrs: { size: "32px", item: "" } },
-                [
-                  _c("v-img", {
-                    attrs: {
-                      src: "https://cdn.vuetifyjs.com/images/logos/logo.svg",
-                      alt: "Vuetify"
-                    }
-                  })
-                ],
-                1
-              )
-            ],
             1
           )
         ],
@@ -80688,18 +80658,27 @@ var routes = [{
     path: 'userroles',
     component: _components_roles_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
     name: 'Roles'
-  }],
-  beforeEnter: function beforeEnter(to, from, next) {
-    if (localStorage.getItem('token')) {
-      next();
-    } else {
-      next('/login');
-    }
-  }
+  }] // beforeEnter: (to, from, next) => {
+  //     if(localStorage.getItem('token')){
+  //         next();
+  //     }else{
+  //         next('/login');
+  //     }
+  //   }
+
 }];
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
+  routes: routes
+});
+router.beforeEach(function (to, from, next) {
+  var token = localStorage.getItem('token') || null;
+  window.axios.defaults.headers['Authorization'] = 'Bearer ' + token;
+  next();
+});
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
-  routes: routes
+  routes: routes,
+  router: router
 }));
 
 /***/ }),

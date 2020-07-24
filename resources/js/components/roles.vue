@@ -90,7 +90,7 @@ export default {
       dialog: false,
       loading: false,
       headers: [
-        
+
         { text: 'ID', value: 'id' },
         { text: 'Name', value: 'name' },
         { text: 'Created At', value: 'created_at' },
@@ -149,6 +149,11 @@ export default {
             });
             axios.get('/api/roles', {})
         .then(res => this.roles = (res.data.roles))
+        // .catch(err => {
+        //     if(err.response.status == 401)
+        //     localStorage.removeItem('token');
+        //     this.$router.push('/login');
+        // })
       },
       editItem (item) {
         this.editedIndex = this.desserts.indexOf(item)
