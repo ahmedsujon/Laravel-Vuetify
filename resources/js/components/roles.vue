@@ -25,7 +25,7 @@
               class="mb-2"
               v-bind="attrs"
               v-on="on"
-            >New Item</v-btn>
+            >Add New Role</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -35,10 +35,10 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
+                  <v-col cols="12" sm="12" md="12">
+                    <v-text-field v-model="editedItem.name" label="Role name"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <!-- <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
@@ -49,7 +49,7 @@
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                  </v-col>
+                  </v-col> -->
                 </v-row>
               </v-container>
             </v-card-text>
@@ -100,22 +100,22 @@ export default {
       roles: [],
       editedIndex: -1,
       editedItem: {
+        id: '',
         name: '',
-        calories: 0,
-        fat: 0,
-        protein: 0,
+        created_at: '',
+        updated_at: '',
       },
       defaultItem: {
+        id: '',
         name: '',
-        calories: 0,
-        fat: 0,
-        protein: 0,
+        created_at: '',
+        updated_at: '',
       },
     }),
 
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? 'New Role' : 'Edit Role'
       },
     },
 
@@ -156,14 +156,14 @@ export default {
         // })
       },
       editItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
+        this.editedIndex = this.roles.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
 
       deleteItem (item) {
-        const index = this.desserts.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+        const index = this.roles.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.roles.splice(index, 1)
       },
 
       close () {
@@ -176,9 +176,11 @@ export default {
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+          Object.assign(this.roles[this.editedIndex], this.editedItem)
         } else {
-          this.desserts.push(this.editedItem)
+          axios.post('/api/roles', {'name' : this.editedItem.name})
+          .then(res => this.roles.push(res.data.role))
+          .catch(err => console.dir(err.response) )
         }
         this.close()
       },
