@@ -18,25 +18,24 @@ const routes = [
         { path: 'userroles', component: Roles, name: 'Roles' },
     ],
 
-    beforeEnter: (to, from, next) => {
-        if(localStorage.getItem('token')){
-            next();
-        }else{
-            next('/login');
-        }
-      }
+    // beforeEnter: (to, from, next) => {
+    //    axios.get('api/verify')
+    //    .then(res => next())
+    //    .catch(err => next('/login'))
+    //   }
     }
   ]
 
-//   const router = new Router({routes})
-//   router.beforeEach((to, from, next) => {
-//       const token = localStorage.getItem('token') || null
-//       window.axios.defaults.headers['Authorization'] = "Bearer " + token ;
-//       next();
-//     })
+  const router = new Router({routes})
+  router.beforeEach((to, from, next) => {
+      const token = localStorage.getItem('token') || null
+      window.axios.defaults.headers['Authorization'] = "Bearer " + token ;
+      next();
+    })
 
 
 export default new Router({
     mode:'history',
     routes,
+    router,
   })

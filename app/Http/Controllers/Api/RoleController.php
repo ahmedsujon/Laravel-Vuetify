@@ -28,11 +28,15 @@ class RoleController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $role = Role::find($id);
+        $role->name = $request->name;
+        $role-> save();
+        return response()->json(['role' => $role], 200);
     }
 
     public function destroy($id)
     {
-        //
+        $role = Role::find($id)->delete();
+        return response()->json(['role' => $role], 200);
     }
 }

@@ -2469,11 +2469,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       dialog: false,
       loading: false,
+      snackbar: false,
       headers: [{
         text: 'ID',
         value: 'id'
@@ -2553,28 +2557,46 @@ __webpack_require__.r(__webpack_exports__);
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
+      var _this2 = this;
+
       var index = this.roles.indexOf(item);
-      confirm('Are you sure you want to delete this item?') && this.roles.splice(index, 1);
+      var decide = confirm('Are you sure you want to delete this item?');
+
+      if (decide) {
+        axios["delete"]('/api/roles/' + item.id).then(function (res) {
+          _this2.snackbar = true;
+
+          _this2.roles.splice(index, 1);
+        })["catch"](function (err) {
+          return console.log(err.response);
+        });
+      }
     },
     close: function close() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.dialog = false;
       this.$nextTick(function () {
-        _this2.editedItem = Object.assign({}, _this2.defaultItem);
-        _this2.editedIndex = -1;
+        _this3.editedItem = Object.assign({}, _this3.defaultItem);
+        _this3.editedIndex = -1;
       });
     },
     save: function save() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.editedIndex > -1) {
-        Object.assign(this.roles[this.editedIndex], this.editedItem);
+        axios.put('/api/roles/' + this.editedItem.id, {
+          'name': this.editedItem.name
+        }).then(function (res) {
+          return Object.assign(_this4.roles[_this4.editedIndex], res.data.role);
+        })["catch"](function (err) {
+          return console.log(err.response);
+        }); //   Object.assign(this.roles[this.editedIndex], this.editedItem)
       } else {
         axios.post('/api/roles', {
           'name': this.editedItem.name
         }).then(function (res) {
-          return _this3.roles.push(res.data.role);
+          return _this4.roles.push(res.data.role);
         })["catch"](function (err) {
           return console.dir(err.response);
         });
@@ -21153,6 +21175,58 @@ var render = function() {
                             )
                           ],
                           1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-snackbar",
+                          {
+                            scopedSlots: _vm._u([
+                              {
+                                key: "action",
+                                fn: function(ref) {
+                                  var attrs = ref.attrs
+                                  return [
+                                    _c(
+                                      "v-btn",
+                                      _vm._b(
+                                        {
+                                          attrs: {
+                                            color: "deep-purple",
+                                            text: ""
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              _vm.snackbar = false
+                                            }
+                                          }
+                                        },
+                                        "v-btn",
+                                        attrs,
+                                        false
+                                      ),
+                                      [
+                                        _vm._v(
+                                          "\n             Close\n             "
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                }
+                              }
+                            ]),
+                            model: {
+                              value: _vm.snackbar,
+                              callback: function($$v) {
+                                _vm.snackbar = $$v
+                              },
+                              expression: "snackbar"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n         Record Deleted Successfully!\n         "
+                            )
+                          ]
                         )
                       ],
                       1
@@ -80574,24 +80648,25 @@ var routes = [{
     path: 'userroles',
     component: _components_roles_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
     name: 'Roles'
-  }],
-  beforeEnter: function beforeEnter(to, from, next) {
-    if (localStorage.getItem('token')) {
-      next();
-    } else {
-      next('/login');
-    }
-  }
-}]; //   const router = new Router({routes})
-//   router.beforeEach((to, from, next) => {
-//       const token = localStorage.getItem('token') || null
-//       window.axios.defaults.headers['Authorization'] = "Bearer " + token ;
-//       next();
-//     })
+  }] // beforeEnter: (to, from, next) => {
+  //    axios.get('api/verify')
+  //    .then(res => next())
+  //    .catch(err => next('/login'))
+  //   }
 
+}];
+var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
+  routes: routes
+});
+router.beforeEach(function (to, from, next) {
+  var token = localStorage.getItem('token') || null;
+  window.axios.defaults.headers['Authorization'] = "Bearer " + token;
+  next();
+});
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
-  routes: routes
+  routes: routes,
+  router: router
 }));
 
 /***/ }),

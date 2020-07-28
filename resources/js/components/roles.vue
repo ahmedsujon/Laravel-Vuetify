@@ -38,18 +38,6 @@
                   <v-col cols="12" sm="12" md="12">
                     <v-text-field v-model="editedItem.name" label="Role name"></v-text-field>
                   </v-col>
-                  <!-- <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                  </v-col> -->
                 </v-row>
               </v-container>
             </v-card-text>
@@ -59,6 +47,21 @@
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
               <v-btn color="blue darken-1" text @click="save">Save</v-btn>
             </v-card-actions>
+               <v-snackbar
+            v-model="snackbar"
+            >
+            Record Deleted Successfully!
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="deep-purple"
+                text
+                v-bind="attrs"
+                @click="snackbar = false"
+                >
+                Close
+                </v-btn>
+            </template>
+        </v-snackbar>
           </v-card>
         </v-dialog>
       </v-toolbar>
@@ -89,6 +92,7 @@ export default {
     data: () => ({
       dialog: false,
       loading: false,
+      snackbar: false,
       headers: [
 
         { text: 'ID', value: 'id' },
@@ -163,8 +167,15 @@ export default {
 
       deleteItem (item) {
         const index = this.roles.indexOf(item)
-        confirm('Are you sure you want to delete this item?') && this.roles.splice(index, 1)
-      },
+        let decide = confirm('Are you sure you want to delete this item?')
+        if(decide){
+            axios.delete('/api/roles/'+item.id)
+        .then(res => {
+            this.snackbar = true
+            this.roles.splice(index, 1)
+        }).catch(err => console.log(err.response))
+        }
+    },
 
       close () {
         this.dialog = false
@@ -176,7 +187,11 @@ export default {
 
       save () {
         if (this.editedIndex > -1) {
-          Object.assign(this.roles[this.editedIndex], this.editedItem)
+            axios.put('/api/roles/'+this.editedItem.id, {'name': this.editedItem.name})
+            .then(res => Object.assign(this.roles[this.editedIndex], res.data.role))
+            .catch(err => console.log(err.response))
+
+        //   Object.assign(this.roles[this.editedIndex], this.editedItem)
         } else {
           axios.post('/api/roles', {'name' : this.editedItem.name})
           .then(res => this.roles.push(res.data.role))

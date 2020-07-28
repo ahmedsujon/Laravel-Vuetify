@@ -14,7 +14,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $credentials =$request->only('email', 'password');
-        
+
         if(Auth::attempt($credentials)){
             $token = Str::random(80);
             Auth::user()->api_token = $token;
@@ -24,12 +24,13 @@ class UserController extends Controller
         return response()->json(['status' => 'Email or Password Invalid'], 403);
     }
 
-    public function index()
+    public function verify(Request $request)
     {
-        //
+        return $request->user()->only('name', 'email');
     }
 
-    public function store(Request $request)
+
+    public function index()
     {
         //
     }
